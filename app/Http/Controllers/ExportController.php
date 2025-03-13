@@ -30,6 +30,9 @@ class ExportController extends Controller
         $data = [
             'url' => $scraper->url,
             'result' => $scraper->result,
+            'images' => $scraper->images,
+            'videos' => $scraper->videos,
+            'external_links' => $scraper->external_links,
             'created_at' => $scraper->created_at,
         ];
 
@@ -51,12 +54,15 @@ class ExportController extends Controller
     {
         $scraper = Scraper::where('user_id', Auth::id())->findOrFail($id);
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><scraper></scraper>');
-$xml->addChild('url', htmlspecialchars($scraper->url));
-$xml->addChild('result', htmlspecialchars($scraper->result));
-$xml->addChild('created_at', $scraper->created_at);
+        $xml->addChild('url', htmlspecialchars($scraper->url));
+        $xml->addChild('result', htmlspecialchars($scraper->result));
+        $xml->addChild('result', htmlspecialchars($scraper->result));
+        $xml->addChild('images', htmlspecialchars(json_encode($scraper->images)));
+        $xml->addChild('videos', htmlspecialchars(json_encode($scraper->videos)));
+        $xml->addChild('created_at', $scraper->created_at);
 
-return response($xml->asXML(), 200)
-->header('Content-Type', 'application/xml')
-->header('Content-Disposition', 'attachment; filename="scraper_' . $scraper->id . '.xml"');
-}
+        return response($xml->asXML(), 200)
+            ->header('Content-Type', 'application/xml')
+            ->header('Content-Disposition', 'attachment; filename="scraper_' . $scraper->id . '.xml"');
+    }
 }

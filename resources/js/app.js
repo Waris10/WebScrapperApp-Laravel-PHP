@@ -62,8 +62,8 @@ window.Echo.private(`scraper.${userId}`)
 
         //This will add the welcome message immediately all messages are deleted
         if ($('#chat-bar').children('.chat-entry').length === 0) {
-            $('#chat-bar').append(`
-                        <div class="flex justify-center welcome-message">
+            $('#chat-box').append(`
+                        <div class="flex justify-center" id="welcome-message">
                             <div class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-4 rounded-lg">
                                 Welcome to WebScrapper! Enter a URL to start scraping.
                             </div>

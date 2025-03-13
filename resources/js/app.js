@@ -60,8 +60,9 @@ window.Echo.private(`scraper.${userId}`)
             $(this).remove();
         });
 
-        //This will add the welcome message immediately all messages are deleted
-        if ($('#chat-bar').children('.chat-entry').length === 0) {
+        // let length = $('#chat-box').children('.chat-entry').length
+        // console.log(length);
+        if ($('#chat-box').children('.chat-entry').length === 2) {
             $('#chat-box').append(`
                         <div class="flex justify-center" id="welcome-message">
                             <div class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-4 rounded-lg">
@@ -72,3 +73,6 @@ window.Echo.private(`scraper.${userId}`)
         }
 
     });
+
+//This will add the welcome message immediately all messages are deleted
+

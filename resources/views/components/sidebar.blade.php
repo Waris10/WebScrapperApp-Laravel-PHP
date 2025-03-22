@@ -77,45 +77,33 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Toggle dropdown on ellipsis click
-        $('.ellipsis-btn').on('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation(); // Prevent event bubbling
-            const dropdown = $(this).next('.dropdown-menu');
-            dropdown.toggleClass('hidden');
-        });
-
-        // Close dropdown when clicking outside
-        $(document).on('click', function(e) {
-            if (!$(e.target).closest('.ellipsis-btn').length && !$(e.target).closest('.dropdown-menu').length) {
-                $('.dropdown-menu').addClass('hidden');
-            }
-        });
-
         // Handle delete confirmation (optional)
-        $('.deletion-form').on('submit', function(e) {
-            e.preventDefault();
-            if (!confirm('Are you sure you want to delete this scraping history?')) {
-                e.preventDefault();
+        $(document).on('submit', '.deletion-form', function (e) {
+    e.preventDefault();
+    if (!confirm('Are you sure you want to delete this scraping history?')) {
+        return; // Stop execution if user cancels
+    }
+
+    let id = $(this).data('id');
+
+    $.ajax({
+        url: '{{ route('scraper.delete', ['id' => ':id']) }}'.replace(':id', id),
+        method: 'DELETE',
+        data: {
+            _token: "{{ csrf_token() }}"
+        },
+        success: function (response) {
+            if (response.success) {
+                console.log('Scraping history deleted successfully');
+            } else {
+                alert('Deletion failed: ' + (response.message || 'Unknown error'));
             }
-            let id = $(this).data('id');
-            $.ajax({
-                url: '{{ route('scraper.delete', ['id' => ':id']) }}'.replace(':id', id),
-                method: 'DELETE',
-                data: {
-                _token: "{{ csrf_token() }}"
-                },
-                success: function(response) {
-                    if (response.success) {
-                        console.log('Scraping history deleted successfully');
-                    } else {
-                        alert('Deletion failed: ' + (response.message || 'Unknown error'));
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert('Error deleting scraping history: ' + error);
-                }
-            });
-        });
+        },
+        error: function (xhr, status, error) {
+            alert('Error deleting scraping history: ' + error);
+        }
     });
+});
+
+});
 </script>

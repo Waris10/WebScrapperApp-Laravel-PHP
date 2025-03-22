@@ -15,6 +15,7 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('download.png') }}">
 
     <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
         // On page load or when changing themes, best to add inline in `head` to avoid FOUC
@@ -75,8 +76,27 @@
     localStorage.setItem('color-theme', 'dark');
     }
     }
-
     });
+
+
+
+    // Toggle dropdown on ellipsis click (Using event delegation)
+    $(document).on('click', '.ellipsis-btn', function(e) {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent event bubbling
+
+    const dropdown = $(this).next('.dropdown-menu');
+    $('.dropdown-menu').not(dropdown).addClass('hidden'); // Close other dropdowns
+    dropdown.toggleClass('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    $(document).on('click', function(e) {
+    if (!$(e.target).closest('.ellipsis-btn').length && !$(e.target).closest('.dropdown-menu').length) {
+    $('.dropdown-menu').addClass('hidden');
+    }
+    });
+
 </script>
 
 </html>

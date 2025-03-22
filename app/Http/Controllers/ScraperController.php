@@ -24,7 +24,12 @@ class ScraperController extends Controller
         $scrapers = Scraper::where('user_id', $user_id)->select('id', 'url', 'created_at')->latest()->get();
         $now = Carbon::now();
 
-        //Grouping the scrapers history per time periods
+        // Cloning to avoid modifying the original $now instance
+        $sevenDaysAgo = (clone $now)->subDays(7);
+        $thirtyDaysAgo = (clone $now)->subDays(30);
+        $yesterday = (clone $now)->subDays(1);
+
+        // Grouping the scraper history per time periods
         $groupedScrapersHistories = [
             'today' => [],
             'yesterday' => [],
@@ -39,15 +44,16 @@ class ScraperController extends Controller
                 $groupedScrapersHistories['today'][] = $scraper;
             } elseif ($createdAt->isYesterday()) {
                 $groupedScrapersHistories['yesterday'][] = $scraper;
-            } elseif ($createdAt->between($now->subDays(7), $now->subDays(1))) {
+            } elseif ($createdAt->between($sevenDaysAgo, $yesterday)) {
                 $groupedScrapersHistories['previous_7_days'][] = $scraper;
-            } elseif ($createdAt->between($now->subDays(30), $now->subDays(7))) {
+            } elseif ($createdAt->between($thirtyDaysAgo, $sevenDaysAgo)) {
                 $groupedScrapersHistories['previous_30_days'][] = $scraper;
             }
         }
-        //  dd($groupedScrapersHistories['today']);
+
         return view('chat', compact('groupedScrapersHistories'));
     }
+
 
     /**
      * Show the form for creating a new resource.

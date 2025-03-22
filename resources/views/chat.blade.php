@@ -107,16 +107,16 @@
         if (!url) return;
 
         // Generate a unique ID for the loader
-        const loaderId = `loader-${Date.now()}`;
+        let loaderId = `loader-${Date.now()}`;
 
         // Append user input and loader
         $('#chat-box').append(`
-            <div class="flex justify-end chat-entry">
+            <div class="flex justify-end chat-entry" data-id="${loaderId}">
                 <div class="bg-[#303030] text-white p-4 rounded-lg max-w-md">
                     ${url}
                 </div>
             </div>
-            <div class="flex justify-start" id="${loaderId}">
+            <div class="flex justify-start" id="${loaderId}" data-id="${loaderId}">
                 <div class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-4 rounded-lg max-w-md flex items-center">
                     <span class="loader mr-2"></span> Fetching data...
                 </div>
@@ -139,8 +139,11 @@
                     $("#welcome-message").fadeOut(300, function () {
                     $(this).remove();
                     });
+
+                    //Explicitly change the attr value
+                $(`[data-id="${loaderId}"]`).attr("data-id", response.scraper_id);
                  let html = `
-                 <div class="flex justify-start chat-entry">
+                 <div class="flex justify-start chat-entry" data-id="${response.scraper_id}">
                     <div class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-4 rounded-lg max-w-md">
                         <p> ${response.result}</p>`;
 

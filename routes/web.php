@@ -18,7 +18,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/chat', [ScraperController::class, 'index'])->name('chat.index');
-    Route::post('/scraper/scrape', [ScraperController::class, 'scrape'])->name('scraper.scrape');
+    Route::post('/scraper/scrape', [ScraperController::class, 'scrape'])->name('scraper.scrape')->middleware(['throttle:scraper']);
     Route::delete('/scraper/delete/{id}', [ScraperController::class, 'destroy'])->name('scraper.delete');
     Route::get('/scraper/export/csv/{id}', [ExportController::class, 'exportCsv'])->name('scraper.export.csv');
     Route::get('/scraper/export/json/{id}', [ExportController::class, 'exportJson'])->name('scraper.export.json');

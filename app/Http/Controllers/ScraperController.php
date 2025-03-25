@@ -9,6 +9,7 @@ use App\Models\Scraper;
 use Illuminate\Http\Request;
 use App\Events\ScraperCreated;
 use App\Events\ScraperDeleted;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Symfony\Component\DomCrawler\Crawler;
@@ -71,6 +72,7 @@ class ScraperController extends Controller
 
         try {
             $response = $client->get($url);
+
             $crawler->addHtmlContent($response->getBody()->getContents());
 
             //Scraping all paragraph texts
@@ -135,7 +137,7 @@ class ScraperController extends Controller
                 'videos' => $videos,
                 'external_links' => $externalLinks,
             ]);
-        } catch (Exception $e) {
+        } catch (RequestException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error scraping: ' . $e->getMessage()
